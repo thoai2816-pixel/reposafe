@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <rect width="1200" height="700" fill="#f4f6fb"/>
+  <rect x="40" y="30" width="1120" height="640" rx="14" fill="#ffffff" stroke="#d8deea"/>
+  <text x="70" y="80" font-size="32" fill="#1f2937" font-family="Arial, sans-serif">RepoSafe 安全扫描报告（总览示意）</text>
+  <rect x="70" y="110" width="1060" height="90" rx="10" fill="#eef2ff"/>
+  <text x="90" y="165" font-size="24" fill="#334155" font-family="Arial, sans-serif">总风险 12  |  高危 3  |  中危 4  |  低危 5  |  信息 0</text>
+  <rect x="70" y="230" width="1060" height="390" rx="10" fill="#fafbff" stroke="#dbe3f2"/>
+  <text x="90" y="275" font-size="22" fill="#334155" font-family="Arial, sans-serif">风险明细表（截图占位）</text>
+  <text x="90" y="320" font-size="18" fill="#64748b" font-family="Arial, sans-serif">请在本地运行 scan 命令后，用真实截图替换本图。</text>
+</svg>

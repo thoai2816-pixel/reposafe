@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <rect width="1200" height="700" fill="#f8fafc"/>
+  <rect x="40" y="30" width="1120" height="640" rx="14" fill="#ffffff" stroke="#d8deea"/>
+  <text x="70" y="80" font-size="32" fill="#1f2937" font-family="Arial, sans-serif">风险详情页（示意）</text>
+  <rect x="70" y="120" width="1060" height="120" rx="10" fill="#fff1f2"/>
+  <text x="90" y="170" font-size="22" fill="#9f1239" font-family="Arial, sans-serif">[HIGH] workflow uses pull_request_target</text>
+  <text x="90" y="205" font-size="18" fill="#475569" font-family="Arial, sans-serif">修复建议：使用 pull_request 并限制权限，固定 action 版本。</text>
+  <rect x="70" y="270" width="1060" height="330" rx="10" fill="#fafbff" stroke="#dbe3f2"/>
+  <text x="90" y="320" font-size="18" fill="#64748b" font-family="Arial, sans-serif">请用真实报告详情截图替换本图。</text>
+</svg>
