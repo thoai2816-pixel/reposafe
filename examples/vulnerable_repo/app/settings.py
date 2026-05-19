@@ -1,0 +1,2 @@
+API_TOKEN = "K8sDemoToken_7z1j9QxP4LmN8RvT2YbC5DfG"
+JWT_SAMPLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.signature"

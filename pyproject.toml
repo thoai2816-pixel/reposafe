@@ -13,5 +13,12 @@ dependencies = [
   "pydantic",
   "PyYAML",
   "Jinja2",
+]
+
+[project.optional-dependencies]
+dev = [
   "pytest",
 ]
+
+[project.scripts]
+reposafe = "reposafe.cli:main"

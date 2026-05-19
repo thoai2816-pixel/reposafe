@@ -1,7 +1,7 @@
 
 # RepoSafe
 
-Lightweight open-source repository security scanning tool.
+RepoSafe：轻量级开源仓库安全体检工具。它面向开源项目维护者、课程实践和安全竞赛申报场景，提供本地化、无网络依赖的仓库安全基线扫描能力。
 
 ## 功能概览
 
@@ -11,7 +11,17 @@ Lightweight open-source repository security scanning tool.
 - 开源项目安全基线检测（关键文档缺失、风险文件存在）
 - 统一扫描与多格式报告（Console / JSON / HTML）
 
-Quick start
+## 检测能力
+
+| 功能 | 命令 | 典型风险 |
+| --- | --- | --- |
+| 敏感信息泄露检测 | `reposafe secrets ./repo` | API Key、Token、JWT、私钥片段、云访问密钥、高熵字符串 |
+| 依赖配置风险检测 | `reposafe deps ./repo` | 未固定版本、宽泛版本范围、通配符版本、可疑依赖名、dev 依赖暴露 |
+| CI 配置风险检测 | `reposafe ci ./repo` | `pull_request_target`、`write-all`、Action 未固定 commit、`curl | bash`、明文环境变量 |
+| 安全基线检查 | `reposafe baseline ./repo` | 缺少安全文档、提交 `.env/.pem/.key`、数据库文件、压缩包和临时文件 |
+| 统一扫描报告 | `reposafe scan ./repo` | 终端彩色输出、JSON 报告、HTML 报告 |
+
+## Quick Start
 
 1. Create and activate a Python 3.10+ virtual environment:
 
@@ -25,6 +35,7 @@ source .venv/bin/activate
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install -e .
 ```
 
 3. Run tests:
@@ -40,6 +51,21 @@ python -m reposafe.cli scan ./examples/vulnerable_repo
 python -m reposafe.cli scan ./examples/vulnerable_repo --format json --out report.json
 python -m reposafe.cli scan ./examples/vulnerable_repo --format html --out report.html
 python -m reposafe.cli secrets ./examples/vulnerable_repo
+```
+
+如果安装了 editable 包，也可以直接运行：
+
+```bash
+reposafe scan ./examples/vulnerable_repo --format html --out report.html
+```
+
+## 示例输出
+
+```text
+[HIGH] possible github-token found: .env:1
+[MEDIUM] flask has a broad version range: >=1.0
+[HIGH] workflow uses pull_request_target
+[HIGH] high-risk file should not be committed: .env
 ```
 
 ## 演示说明
@@ -60,6 +86,10 @@ python -m reposafe.cli scan ./examples/vulnerable_repo --format html --out repor
 open report.html
 ```
 
+## 规则说明
+
+RepoSafe 第一版聚焦“配置风险检测”和“开源项目安全体检”，不会联网查询 CVE 数据库，也不会上传代码内容。所有规则在本地执行，输出会保留文件路径、行号、规则 ID、风险等级、脱敏证据和修复建议，便于在申报书中展示“功能介绍、测试情况、使用文档、真实案例和社会价值”。
+
 ## 报告截图
 
 > 当前仓库先放置了示意图，便于文档排版；可在你录制演示后用真实截图替换同名文件。
@@ -74,6 +104,5 @@ open report.html
 
 Notes:
 
-- If you prefer editable install, run `pip install -e .` to make local changes available to Python.
-- For CI or packaging, use the `pyproject.toml` provided.
-
+- 详细使用说明见 [docs/usage.md](docs/usage.md)。
+- 申报书辅助材料见 [docs/application_material.md](docs/application_material.md)。

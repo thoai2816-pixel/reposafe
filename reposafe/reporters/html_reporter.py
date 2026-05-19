@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+from html import escape
 from jinja2 import Template
 from ..models import Finding
 
@@ -9,17 +10,17 @@ HTML_TMPL = """
   <title>RepoSafe 报告</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root{--bg:#f6f8fa;--card:#ffffff;--accent:#2b6cb0;--muted:#6b7280}
+    :root{--bg:#f6f8fa;--card:#ffffff;--accent:#2563eb;--muted:#64748b;--line:#e2e8f0}
     body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); margin:0; padding:24px}
     .container{max-width:1100px;margin:0 auto}
     header{display:flex;align-items:center;gap:16px}
     h1{margin:0;font-size:20px}
     .meta{color:var(--muted);font-size:13px}
-    .cards{display:flex;gap:12px;margin-top:16px;margin-bottom:20px}
-    .card{background:var(--card);padding:12px;border-radius:8px;box-shadow:0 1px 2px rgba(16,24,40,0.05);flex:1}
+    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px;margin-bottom:20px}
+    .card{background:var(--card);padding:12px;border-radius:8px;border:1px solid var(--line);flex:1}
     .big{font-size:20px;font-weight:600}
     table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden}
-    th,td{padding:12px;border-bottom:1px solid #eef2f7;text-align:left}
+    th,td{padding:12px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top}
     thead th{background:#f8fafc;font-weight:600}
     .badge{display:inline-block;padding:4px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px}
     .badge.high{background:#e53e3e}
@@ -29,6 +30,11 @@ HTML_TMPL = """
     details{margin-top:6px}
     .file{color:#0f172a;font-weight:600}
     .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}
+    .chip{background:#eef2ff;color:#1e3a8a;border-radius:999px;padding:6px 10px;font-size:12px}
+    code{background:#f1f5f9;border-radius:5px;padding:2px 5px}
+    @media(max-width:760px){body{padding:14px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}table{display:block;overflow:auto}}
     footer{margin-top:18px;color:var(--muted);font-size:13px}
   </style>
 </head>
@@ -62,6 +68,12 @@ HTML_TMPL = """
       </div>
     </div>
 
+    <div class="chips">
+      {% for scanner, stat in scanner_stats.items() %}
+      <span class="chip">{{scanner}}: {{stat.findings}} findings / {{stat.duration_seconds}}s</span>
+      {% endfor %}
+    </div>
+
     <table>
       <thead>
         <tr><th style="width:120px">严重等级</th><th style="width:140px">扫描器</th><th>详情 / 规则 / 修复建议</th><th style="width:220px">文件</th><th style="width:80px">行号</th></tr>
@@ -76,8 +88,9 @@ HTML_TMPL = """
           <td>
             <div>{{f.message}}</div>
             <details>
-              <summary class="muted">规则: {{f.rule_id or 'N/A'}} • 点击查看修复建议</summary>
+              <summary class="muted">规则: {{f.rule_id or 'N/A'}} • 类别: {{f.category or 'N/A'}} • 置信度: {{f.confidence}}</summary>
               <div style="margin-top:8px">{{f.recommendation or '无'}}</div>
+              {% if f.evidence %}<div class="small muted">Evidence: <code>{{f.evidence}}</code></div>{% endif %}
             </details>
           </td>
           <td><div class="file">{{f.file or ''}}</div></td>
@@ -121,12 +134,15 @@ class HTMLReporter:
         'severity': str(getattr(f, 'severity', 'LOW')),
         'severity_cn': sev_cn,
         'severity_class': sev_class,
-        'scanner': f.scanner,
-        'message': f.message,
-        'file': f.file,
+        'scanner': escape(f.scanner),
+        'message': escape(f.message),
+        'file': escape(f.file or ''),
         'line': f.line,
-        'rule_id': f.rule_id,
-        'recommendation': f.recommendation,
+        'rule_id': escape(f.rule_id or ''),
+        'recommendation': escape(f.recommendation or ''),
+        'category': escape(f.category or ''),
+        'evidence': escape(f.evidence or ''),
+        'confidence': f"{f.confidence:.2f}",
       })
       summary[sev_class] += 1
       summary['total'] += 1
@@ -138,6 +154,7 @@ class HTMLReporter:
           findings=rows,
           summary=summary,
           scan_time=(metadata.get('scan_time') if metadata else ''),
-          scanned_path=(metadata.get('scanned_path') if metadata else ''),
+          scanned_path=escape(metadata.get('scanned_path') if metadata else ''),
+          scanner_stats=(metadata.get('scanner_stats') if metadata else {}),
         )
       )
