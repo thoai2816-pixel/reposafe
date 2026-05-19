@@ -16,9 +16,9 @@ class DependencyScanner(RepoScanner):
             if not line or line.startswith('#'):
                 continue
             if '==' not in line and '>=' not in line and '<=' not in line and '~=' not in line:
-                findings.append(Finding(scanner='deps', severity=Severity.MEDIUM, message=f'{line.split("#")[0].strip()} is not pinned to a fixed version', file=str(p), line=line_no))
+                findings.append(Finding(scanner='deps', severity=Severity.MEDIUM, message=f'{line.split("#")[0].strip()} is not pinned to a fixed version', file=str(p), line=line_no, rule_id='D001', recommendation='Pin dependency to a specific version (==).'))
             if '*' in line:
-                findings.append(Finding(scanner='deps', severity=Severity.HIGH, message=f'package uses wildcard version: {line}', file=str(p), line=line_no))
+                findings.append(Finding(scanner='deps', severity=Severity.HIGH, message=f'package uses wildcard version: {line}', file=str(p), line=line_no, rule_id='D002', recommendation='Avoid wildcard versions; pin to a stable release.'))
         return findings
 
     def _check_package_json(self, p: Path):
@@ -31,9 +31,9 @@ class DependencyScanner(RepoScanner):
             deps = data.get(section, {})
             for name, ver in deps.items():
                 if isinstance(ver, str) and ('*' in ver or ver.strip() == ''):
-                    findings.append(Finding(scanner='deps', severity=Severity.HIGH, message=f'{name}@{ver} uses wildcard', file=str(p)))
+                    findings.append(Finding(scanner='deps', severity=Severity.HIGH, message=f'{name}@{ver} uses wildcard', file=str(p), rule_id='D002', recommendation='Avoid wildcard versions; pin to a stable release.'))
                 if isinstance(ver, str) and ('>=' in ver or '<=' in ver or '^' in ver):
-                    findings.append(Finding(scanner='deps', severity=Severity.MEDIUM, message=f'{name} has wide version spec: {ver}', file=str(p)))
+                    findings.append(Finding(scanner='deps', severity=Severity.MEDIUM, message=f'{name} has wide version spec: {ver}', file=str(p), rule_id='D001', recommendation='Consider pinning to a specific version for reproducible builds.'))
         return findings
 
     def run(self):

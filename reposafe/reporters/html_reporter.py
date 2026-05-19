@@ -19,7 +19,8 @@ HTML_TMPL = """
 </head>
 <body>
   <h1>RepoSafe 安全扫描报告</h1>
-  <p>总发现: {{summary.total}}；高: {{summary.high}}，中: {{summary.medium}}，低: {{summary.low}}</p>
+  <p>扫描路径: {{scanned_path}} &nbsp; 扫描时间: {{scan_time}}</p>
+  <p>总发现: {{summary.total}}；高: {{summary.high}}，中: {{summary.medium}}，低: {{summary.low}}，信息: {{summary.info}}</p>
   <table>
     <thead>
       <tr><th>严重等级</th><th>扫描器</th><th>详情</th><th>文件</th><th>行号</th></tr>
@@ -29,7 +30,10 @@ HTML_TMPL = """
       <tr class="{{f.severity_class}}">
         <td>{{f.severity_cn}}</td>
         <td>{{f.scanner}}</td>
-        <td>{{f.message}}</td>
+        <td>
+          <div>{{f.message}}</div>
+          <div><strong>规则：</strong>{{f.rule_id or ''}} &nbsp; <strong>修复建议：</strong>{{f.recommendation or ''}}</div>
+        </td>
         <td>{{f.file or ''}}</td>
         <td>{{f.line or ''}}</td>
       </tr>
@@ -56,21 +60,23 @@ class HTMLReporter:
 
     def report(self, findings: List[Finding]):
         rows = []
-        summary = {'high': 0, 'medium': 0, 'low': 0, 'total': 0}
+        summary = {'high': 0, 'medium': 0, 'low': 0, 'info': 0, 'total': 0}
         for f in findings:
-            sev_cn, sev_class = self._map_severity(getattr(f, 'severity', 'LOW'))
-            rows.append({
-                'severity': str(getattr(f, 'severity', 'LOW')),
-                'severity_cn': sev_cn,
-                'severity_class': sev_class,
-                'scanner': f.scanner,
-                'message': f.message,
-                'file': f.file,
-                'line': f.line,
-            })
-            summary[sev_class] += 1
-            summary['total'] += 1
+          sev_cn, sev_class = self._map_severity(getattr(f, 'severity', 'LOW'))
+          rows.append({
+            'severity': str(getattr(f, 'severity', 'LOW')),
+            'severity_cn': sev_cn,
+            'severity_class': sev_class,
+            'scanner': f.scanner,
+            'message': f.message,
+            'file': f.file,
+            'line': f.line,
+            'rule_id': f.rule_id,
+            'recommendation': f.recommendation,
+          })
+          summary[sev_class] += 1
+          summary['total'] += 1
 
         tpl = Template(HTML_TMPL)
         with open(self.out, 'w', encoding='utf8') as fh:
-            fh.write(tpl.render(findings=rows, summary=summary))
+          fh.write(tpl.render(findings=rows, summary=summary, scan_time=metadata.get('scan_time') if metadata else '', scanned_path=metadata.get('scanned_path') if metadata else ''))

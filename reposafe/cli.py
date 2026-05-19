@@ -13,12 +13,12 @@ app = typer.Typer(help="RepoSafe — lightweight repo security scanner")
 
 
 def _dispatch(path: Path, scanners, out=None, fmt=None):
-    findings = run_scanners(path, scanners)
-    ConsoleReporter().report(findings)
+    findings, metadata = run_scanners(path, scanners)
+    ConsoleReporter().report(findings, metadata)
     if fmt == "json" or (fmt is None and out and out.endswith('.json')):
-        JSONReporter(out).report(findings)
+        JSONReporter(out).report(findings, metadata)
     if fmt == "html" or (fmt is None and out and out.endswith('.html')):
-        HTMLReporter(out or 'report.html').report(findings)
+        HTMLReporter(out or 'report.html').report(findings, metadata)
 
 
 @app.command()

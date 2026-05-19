@@ -23,7 +23,7 @@ class BaselineScanner(RepoScanner):
         for name, sev in DEFAULT_FILES:
             p = self.root / name
             if not p.exists():
-                findings.append(Finding(scanner='baseline', severity=Severity.LOW, message=f'{name} is missing'))
+                findings.append(Finding(scanner='baseline', severity=Severity.LOW, message=f'{name} is missing', rule_id='B001', recommendation=f'Add {name} to the repository as appropriate.'))
             else:
                 findings.append(Finding(scanner='baseline', severity=Severity.LOW, message=f'{name} found: {p.name}', file=str(p)))
 
@@ -33,5 +33,5 @@ class BaselineScanner(RepoScanner):
             if p.is_file():
                 for pat in patterns:
                     if fnmatch.fnmatch(p.name.lower(), pat):
-                        findings.append(Finding(scanner='baseline', severity=Severity.HIGH, message=f'risky file found: {p.name}', file=str(p)))
+                        findings.append(Finding(scanner='baseline', severity=Severity.HIGH, message=f'risky file found: {p.name}', file=str(p), rule_id='B002', recommendation='Remove sensitive or large files and add them to .gitignore; rotate any secrets.'))
         return findings

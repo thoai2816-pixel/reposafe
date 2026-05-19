@@ -27,7 +27,7 @@ class SecretsScanner(RepoScanner):
         for pat, sev in SECRET_PATTERNS:
             for m in re.finditer(pat, text, re.DOTALL):
                 line = text[:m.start()].count('\n') + 1
-                findings.append(Finding(scanner='secrets', severity=sev, message=f'possible secret match: {m.group(0)[:80]}', file=str(p), line=line))
+                findings.append(Finding(scanner='secrets', severity=sev, message=f'possible secret match: {m.group(0)[:80]}', file=str(p), line=line, rule_id='S001', recommendation='Remove secret from repo and rotate credentials'))
         return findings
 
     def run(self):
