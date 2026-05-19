@@ -1,0 +1,5 @@
+# baseline rules example
+required_files:
+  - LICENSE
+  - README.md
+  - SECURITY.md

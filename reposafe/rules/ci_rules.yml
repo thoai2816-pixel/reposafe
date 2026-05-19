@@ -1,0 +1,5 @@
+# CI rules example
+rules:
+  - id: pull_request_target
+    message: workflow uses pull_request_target
+    severity: HIGH

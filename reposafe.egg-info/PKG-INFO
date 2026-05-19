@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: reposafe
+Version: 0.1.0
+Summary: Lightweight repo security scanner
+Requires-Python: >=3.10
+Requires-Dist: typer[all]
+Requires-Dist: rich
+Requires-Dist: pydantic
+Requires-Dist: PyYAML
+Requires-Dist: Jinja2
+Requires-Dist: pytest

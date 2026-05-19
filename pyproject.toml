@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reposafe"
+version = "0.1.0"
+description = "Lightweight repo security scanner"
+requires-python = ">=3.10"
+dependencies = [
+  "typer[all]",
+  "rich",
+  "pydantic",
+  "PyYAML",
+  "Jinja2",
+  "pytest",
+]

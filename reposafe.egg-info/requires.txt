@@ -1,0 +1,6 @@
+typer[all]
+rich
+pydantic
+PyYAML
+Jinja2
+pytest
