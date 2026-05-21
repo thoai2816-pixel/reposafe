@@ -5,17 +5,17 @@
   <title>RepoSafe 报告</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root{--bg:#f6f8fa;--card:#ffffff;--accent:#2b6cb0;--muted:#6b7280}
+    :root{--bg:#f6f8fa;--card:#ffffff;--accent:#2563eb;--muted:#64748b;--line:#e2e8f0}
     body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); margin:0; padding:24px}
     .container{max-width:1100px;margin:0 auto}
     header{display:flex;align-items:center;gap:16px}
     h1{margin:0;font-size:20px}
     .meta{color:var(--muted);font-size:13px}
-    .cards{display:flex;gap:12px;margin-top:16px;margin-bottom:20px}
-    .card{background:var(--card);padding:12px;border-radius:8px;box-shadow:0 1px 2px rgba(16,24,40,0.05);flex:1}
+    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px;margin-bottom:20px}
+    .card{background:var(--card);padding:12px;border-radius:8px;border:1px solid var(--line);flex:1}
     .big{font-size:20px;font-weight:600}
     table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden}
-    th,td{padding:12px;border-bottom:1px solid #eef2f7;text-align:left}
+    th,td{padding:12px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top}
     thead th{background:#f8fafc;font-weight:600}
     .badge{display:inline-block;padding:4px 8px;border-radius:999px;color:#fff;font-weight:700;font-size:12px}
     .badge.high{background:#e53e3e}
@@ -25,6 +25,11 @@
     details{margin-top:6px}
     .file{color:#0f172a;font-weight:600}
     .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}
+    .chip{background:#eef2ff;color:#1e3a8a;border-radius:999px;padding:6px 10px;font-size:12px}
+    code{background:#f1f5f9;border-radius:5px;padding:2px 5px}
+    @media(max-width:760px){body{padding:14px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}table{display:block;overflow:auto}}
     footer{margin-top:18px;color:var(--muted);font-size:13px}
   </style>
 </head>
@@ -33,29 +38,41 @@
     <header>
       <h1>RepoSafe 安全扫描报告</h1>
     </header>
-    <div class="meta">扫描路径: examples/vulnerable_repo • 扫描时间: 2026-05-19T03:49:48.469658Z</div>
+    <div class="meta">扫描路径: examples/vulnerable_repo • 扫描时间: 2026-05-19T07:29:31Z</div>
 
     <div class="cards">
       <div class="card">
         <div class="muted">总风险</div>
-        <div class="big">5</div>
+        <div class="big">30</div>
       </div>
       <div class="card">
         <div class="muted">高危</div>
-        <div class="big">0</div>
+        <div class="big">11</div>
       </div>
       <div class="card">
         <div class="muted">中危</div>
-        <div class="big">0</div>
+        <div class="big">11</div>
       </div>
       <div class="card">
         <div class="muted">低危</div>
-        <div class="big">5</div>
+        <div class="big">7</div>
       </div>
       <div class="card">
         <div class="muted">信息</div>
-        <div class="big">0</div>
+        <div class="big">1</div>
       </div>
+    </div>
+
+    <div class="chips">
+      
+      <span class="chip">SecretsScanner: 7 findings / 0.0015s</span>
+      
+      <span class="chip">DependencyScanner: 10 findings / 0.0004s</span>
+      
+      <span class="chip">CIConfigScanner: 6 findings / 0.0007s</span>
+      
+      <span class="chip">BaselineScanner: 7 findings / 0.0005s</span>
+      
     </div>
 
     <table>
@@ -66,14 +83,389 @@
       
         <tr>
           <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>baseline</td>
+          <td>
+            <div>high-risk file should not be committed: .env</div>
+            <details>
+              <summary class="muted">规则: B002 • 类别: risky_file • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Remove secrets, database dumps, private keys, and local environment files from git; rotate exposed credentials.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>baseline</td>
+          <td>
+            <div>high-risk file should not be committed: backup.sql</div>
+            <details>
+              <summary class="muted">规则: B002 • 类别: risky_file • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Remove secrets, database dumps, private keys, and local environment files from git; rotate exposed credentials.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">backup.sql</div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>workflow uses pull_request_target</div>
+            <details>
+              <summary class="muted">规则: C001 • 类别: ci_risk • 置信度: 0.85</summary>
+              <div style="margin-top:8px">Use pull_request for untrusted contributions, or tightly restrict pull_request_target jobs and permissions.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>4</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>workflow permissions are set to write-all</div>
+            <details>
+              <summary class="muted">规则: C002 • 类别: ci_risk • 置信度: 0.85</summary>
+              <div style="margin-top:8px">Use least-privilege permissions and grant write scopes only to jobs that require them.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>6</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>plaintext sensitive environment variable: API_TOKEN</div>
+            <details>
+              <summary class="muted">规则: C006 • 类别: plaintext_ci_secret • 置信度: 0.85</summary>
+              <div style="margin-top:8px">Store sensitive values in GitHub Actions secrets and reference them with the secrets context.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>9</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>dangerous shell pattern: curl/wget | shell</div>
+            <details>
+              <summary class="muted">规则: C005 • 类别: dangerous_shell • 置信度: 0.90</summary>
+              <div style="margin-top:8px">Avoid executing remote scripts directly; download, verify integrity, then run from a trusted location.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>18</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>npm script postinstall pipes remote content to shell</div>
+            <details>
+              <summary class="muted">规则: D007 • 类别: install_script_risk • 置信度: 0.90</summary>
+              <div style="margin-top:8px">Avoid curl/wget pipe-to-shell install scripts; verify downloaded content before execution.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td>5</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>package uses wildcard version: lodash@*</div>
+            <details>
+              <summary class="muted">规则: D002 • 类别: dependency_risk • 置信度: 0.80</summary>
+              <div style="margin-top:8px">Avoid wildcard or latest versions; pin to a stable release.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td>8</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>sensitive credential file committed: .env</div>
+            <details>
+              <summary class="muted">规则: S008 • 类别: secret_file • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Remove credential files from git, add them to .gitignore, and rotate any exposed material.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>possible github-token found</div>
+            <details>
+              <summary class="muted">规则: S002 • 类别: secret_leak • 置信度: 0.90</summary>
+              <div style="margin-top:8px">Revoke the GitHub token and replace it with a short-lived secret injected by CI.</div>
+              <div class="small muted">Evidence: <code>ghp_...UVWX</code></div>
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge high">高</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>possible aws-access-key found</div>
+            <details>
+              <summary class="muted">规则: S003 • 类别: secret_leak • 置信度: 0.90</summary>
+              <div style="margin-top:8px">Disable the AWS access key, rotate the credential pair, and remove it from git history if exposed.</div>
+              <div class="small muted">Evidence: <code>AKIA...CDEF</code></div>
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>security-related job security-scan uses continue-on-error</div>
+            <details>
+              <summary class="muted">规则: C007 • 类别: fail_open_security • 置信度: 0.85</summary>
+              <div style="margin-top:8px">Security checks should fail the workflow when they detect issues or crash.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>14</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>ci</td>
+          <td>
+            <div>action is not pinned by commit SHA: actions/checkout@v4</div>
+            <details>
+              <summary class="muted">规则: C004 • 类别: unpinned_action • 置信度: 0.85</summary>
+              <div style="margin-top:8px">Tags and branches can move; pin third-party actions to a reviewed commit SHA.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">.github/workflows/security.yml</div></td>
+          <td>16</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>express has a broad version range: ^4.18.0</div>
+            <details>
+              <summary class="muted">规则: D003 • 类别: dependency_risk • 置信度: 0.80</summary>
+              <div style="margin-top:8px">Use exact versions or a lockfile-backed workflow for deterministic builds.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td>9</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>nodemon has a broad version range: ^3.0.0</div>
+            <details>
+              <summary class="muted">规则: D003 • 类别: dependency_risk • 置信度: 0.80</summary>
+              <div style="margin-top:8px">Use exact versions or a lockfile-backed workflow for deterministic builds.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td>12</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>requests is not pinned to a fixed version</div>
+            <details>
+              <summary class="muted">规则: D001 • 类别: dependency_risk • 置信度: 0.80</summary>
+              <div style="margin-top:8px">Pin dependencies to exact versions for reproducible security review.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">requirements.txt</div></td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>flask has a broad version range: &gt;=1.0</div>
+            <details>
+              <summary class="muted">规则: D003 • 类别: dependency_risk • 置信度: 0.80</summary>
+              <div style="margin-top:8px">Use exact versions or a lockfile-backed workflow for deterministic builds.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">requirements.txt</div></td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>suspicious dependency name reqeusts; did you mean requests?</div>
+            <details>
+              <summary class="muted">规则: D004 • 类别: typosquatting • 置信度: 0.75</summary>
+              <div style="margin-top:8px">Review dependency names carefully to reduce typosquatting risk.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">requirements.txt</div></td>
+          <td>3</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>high entropy credential-like value assigned to GITHUB_TOKEN</div>
+            <details>
+              <summary class="muted">规则: S007 • 类别: high_entropy_secret • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Confirm whether the value is a real secret, then move it to a secret manager and rotate it if exposed.</div>
+              <div class="small muted">Evidence: <code>ghp_...UVWX</code></div>
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>high entropy credential-like value assigned to AWS_ACCESS_KEY_ID</div>
+            <details>
+              <summary class="muted">规则: S007 • 类别: high_entropy_secret • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Confirm whether the value is a real secret, then move it to a secret manager and rotate it if exposed.</div>
+              <div class="small muted">Evidence: <code>AKIA...CDEF</code></div>
+            </details>
+          </td>
+          <td><div class="file">.env</div></td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>high entropy credential-like value assigned to API_TOKEN</div>
+            <details>
+              <summary class="muted">规则: S007 • 类别: high_entropy_secret • 置信度: 0.95</summary>
+              <div style="margin-top:8px">Confirm whether the value is a real secret, then move it to a secret manager and rotate it if exposed.</div>
+              <div class="small muted">Evidence: <code>K8sD...5DfG</code></div>
+            </details>
+          </td>
+          <td><div class="file">app/settings.py</div></td>
+          <td>1</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge medium">中</span>
+          </td>
+          <td>secrets</td>
+          <td>
+            <div>possible jwt found</div>
+            <details>
+              <summary class="muted">规则: S004 • 类别: secret_leak • 置信度: 0.75</summary>
+              <div style="margin-top:8px">Do not commit JWTs; use short-lived tokens and inject them through environment variables.</div>
+              <div class="small muted">Evidence: <code>eyJh...ture</code></div>
+            </details>
+          </td>
+          <td><div class="file">app/settings.py</div></td>
+          <td>2</td>
+        </tr>
+      
+        <tr>
+          <td>
             <span class="badge low">低</span>
           </td>
           <td>baseline</td>
           <td>
             <div>LICENSE is missing</div>
             <details>
-              <summary class="muted">规则: B001 • 点击查看修复建议</summary>
-              <div style="margin-top:8px">Add LICENSE to the repository as appropriate.</div>
+              <summary class="muted">规则: B001 • 类别: missing_baseline_file • 置信度: 1.00</summary>
+              <div style="margin-top:8px">Add an open-source license so downstream users understand permitted use.</div>
+              
             </details>
           </td>
           <td><div class="file"></div></td>
@@ -86,26 +478,11 @@
           </td>
           <td>baseline</td>
           <td>
-            <div>README.md found: README.md</div>
-            <details>
-              <summary class="muted">规则: N/A • 点击查看修复建议</summary>
-              <div style="margin-top:8px">无</div>
-            </details>
-          </td>
-          <td><div class="file">examples/vulnerable_repo/README.md</div></td>
-          <td></td>
-        </tr>
-      
-        <tr>
-          <td>
-            <span class="badge low">低</span>
-          </td>
-          <td>baseline</td>
-          <td>
             <div>SECURITY.md is missing</div>
             <details>
-              <summary class="muted">规则: B001 • 点击查看修复建议</summary>
-              <div style="margin-top:8px">Add SECURITY.md to the repository as appropriate.</div>
+              <summary class="muted">规则: B001 • 类别: missing_baseline_file • 置信度: 1.00</summary>
+              <div style="margin-top:8px">Add a SECURITY.md that explains how to report vulnerabilities responsibly.</div>
+              
             </details>
           </td>
           <td><div class="file"></div></td>
@@ -120,8 +497,9 @@
           <td>
             <div>.gitignore is missing</div>
             <details>
-              <summary class="muted">规则: B001 • 点击查看修复建议</summary>
-              <div style="margin-top:8px">Add .gitignore to the repository as appropriate.</div>
+              <summary class="muted">规则: B001 • 类别: missing_baseline_file • 置信度: 1.00</summary>
+              <div style="margin-top:8px">Add .gitignore entries for credentials, build outputs, caches, and local files.</div>
+              
             </details>
           </td>
           <td><div class="file"></div></td>
@@ -136,11 +514,80 @@
           <td>
             <div>CODE_OF_CONDUCT.md is missing</div>
             <details>
-              <summary class="muted">规则: B001 • 点击查看修复建议</summary>
-              <div style="margin-top:8px">Add CODE_OF_CONDUCT.md to the repository as appropriate.</div>
+              <summary class="muted">规则: B001 • 类别: missing_baseline_file • 置信度: 1.00</summary>
+              <div style="margin-top:8px">Add a code of conduct for community participation if the project accepts contributions.</div>
+              
             </details>
           </td>
           <td><div class="file"></div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge low">低</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>package.json has no recognized lockfile nearby</div>
+            <details>
+              <summary class="muted">规则: D008 • 类别: missing_lockfile • 置信度: 0.70</summary>
+              <div style="margin-top:8px">Commit a lockfile when the package manager supports it so dependency resolution is reproducible.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge low">低</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>dev dependency may expose local debug or dev-server behavior: nodemon</div>
+            <details>
+              <summary class="muted">规则: D006 • 类别: dev_dependency_exposure • 置信度: 0.65</summary>
+              <div style="margin-top:8px">Keep dev dependencies out of production images and verify build artifacts do not expose debug tooling.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">package.json</div></td>
+          <td>12</td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge low">低</span>
+          </td>
+          <td>deps</td>
+          <td>
+            <div>requirements.txt has no recognized lockfile nearby</div>
+            <details>
+              <summary class="muted">规则: D008 • 类别: missing_lockfile • 置信度: 0.70</summary>
+              <div style="margin-top:8px">Commit a lockfile when the package manager supports it so dependency resolution is reproducible.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">requirements.txt</div></td>
+          <td></td>
+        </tr>
+      
+        <tr>
+          <td>
+            <span class="badge info">信息</span>
+          </td>
+          <td>baseline</td>
+          <td>
+            <div>README.md found</div>
+            <details>
+              <summary class="muted">规则: B000 • 类别: baseline_present • 置信度: 1.00</summary>
+              <div style="margin-top:8px">No action required.</div>
+              
+            </details>
+          </td>
+          <td><div class="file">README.md</div></td>
           <td></td>
         </tr>
       
@@ -148,7 +595,7 @@
     </table>
 
     <footer>
-      Report generated by RepoSafe • 2026-05-19T03:49:48.469658Z • Scanned path: examples/vulnerable_repo
+      Report generated by RepoSafe • 2026-05-19T07:29:31Z • Scanned path: examples/vulnerable_repo
     </footer>
   </div>
 </body>

@@ -23,7 +23,19 @@ RepoSafe 面向开源项目维护者和安全初学者，提供一套可在本�
 - 完全本地运行，不需要联网查询漏洞库，适合对私有仓库或未公开课程项目进行预检查。
 - 示例仓库内置多类可控风险，便于答辩截图、课堂演示和回归测试。
 
-## 五、测试情况
+## 五、真实引用案例
+
+项目已提供 `examples/integration_demo` 示例程序，用于演示第三方 Python 程序如何调用 RepoSafe 的扫描能力。该示例不通过命令行启动 RepoSafe，而是直接导入 `run_scanners`、`SecretsScanner`、`DependencyScanner`、`CIConfigScanner` 和 `BaselineScanner`，对 `examples/vulnerable_repo` 进行安全检查，并输出结构化扫描结果。
+
+运行命令如下：
+
+```bash
+.venv/bin/python examples/integration_demo/third_party_scan.py
+```
+
+示例输出包含 `integration_name`、`target_repo`、`summary` 和 `top_findings` 等字段，能够被其他 Python 程序、教学评测系统、CI 质量门禁或安全平台继续读取和处理。该示例验证了 RepoSafe 不仅可以作为独立命令行工具使用，也具备被其他软件引用、依赖和集成的能力。
+
+## 六、测试情况
 
 当前测试覆盖四类核心扫描器：
 
@@ -40,19 +52,20 @@ RepoSafe 面向开源项目维护者和安全初学者，提供一套可在本�
 
 本次验证结果：`8 passed in 0.12s`。
 
-## 六、代码规模
+## 七、代码规模
 
 当前 `reposafe/*.py` 业务代码约 1500 行，主要集中在四类扫描器、统一调度、数据模型、报告生成和工具函数。若按申报模板中“不少于 2000 行且不含注释和空行”的版本提交，建议继续扩展规则库、SARIF 报告、配置文件支持和批量仓库扫描功能。
 
-## 七、推荐截图清单
+## 八、推荐截图清单
 
 - 终端执行 `reposafe scan ./examples/vulnerable_repo` 的彩色输出。
 - `report.html` 首页，展示总风险和高/中/低危统计。
 - HTML 风险详情展开区域，展示规则 ID、类别、置信度、脱敏证据和修复建议。
 - `report.json` 结构化报告字段。
+- `examples/integration_demo/third_party_scan.py` 运行结果，展示第三方程序引用 RepoSafe 的真实案例。
 - `tests/` 目录和 `.venv/bin/python -m pytest -q` 通过结果。
 - GitHub 仓库目录结构，展示 `reposafe/`、`tests/`、`examples/`、`docs/`。
 
-## 八、可写入申报书的简短描述
+## 九、可写入申报书的简短描述
 
 RepoSafe 是一款轻量级开源仓库安全体检工具，围绕敏感信息泄露、依赖配置、GitHub Actions/CI 配置和开源项目安全基线四类风险提供本地扫描能力。工具支持统一命令行入口和彩色终端、JSON、HTML 三种报告格式，能够输出风险等级、规则 ID、文件路径、行号、脱敏证据和修复建议。项目可帮助开源项目维护者在代码公开或版本发布前发现常见安全问题，降低密钥泄露、供应链配置缺陷和 CI 权限滥用风险。
